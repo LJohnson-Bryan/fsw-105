@@ -26,3 +26,28 @@ function stringCombination(str) {
 
 console.log(stringCombination("Hello world!"));
 console.log(stringCombination("Hello world! What a nice day it is outside! Let's take a walk!"));
+
+var fibonacciNumbers = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
+
+function firstFibonacciNumbers(n) {
+    var total = 0;
+    for (var i = 0; i < n; i++) {
+        total += fibonacciNumbers[i];
+    }
+    return total;
+}
+
+console.log(firstFibonacciNumbers(5));
+
+function maxChar(myStr) {
+    let charObj = {};
+    return [...myStr].reduce((_, char) => {
+      if (char in charObj) charObj[char]++;
+      else if (char !== " ") charObj[char] = 1;
+      return Object.keys(charObj).reduce((a, b) => {
+        return charObj[a] > charObj[b] ? a : b;
+      });
+    });
+  }
+
+console.log(maxChar("hello world!"));
