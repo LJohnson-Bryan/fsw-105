@@ -90,7 +90,7 @@ console.clear();
 console.log(`Ahh, ${playerData.name}! You are now a monster hunter.\nThere are monsters roaming the world, and it is your job to just walk and destroy them all!\nTry doing "W" to walk!`);
 
 while(isAlive) {
-    combatFlagged ? console.log("Available Actions: < Attack / Run >") : console.log("Available Actions: < W / Print / Help / Quit >");
+    combatFlagged ? console.log("Available Actions: < Attack / Run >") : console.log("Available Actions: < W / Print / Sell / Help / Quit >");
     let query = readline.question("What is your next action?\n");
     if(combatFlagged) {
         switch(query.toLowerCase()) {
@@ -141,11 +141,11 @@ while(isAlive) {
             break;
             case "print":
                 console.clear();
-                console.log(`Showing player data for: ${playerData.name}\nHealth: ${playerData.health}/20 HP\nCoins: ${playerData.inventory.coins}\nInventory Bag: ${playerData.inventory.bag}`);
+                console.log(`Showing player data for: ${playerData.name}\nHealth: ${Math.floor(playerData.health)}/20 HP\nCoins: ${playerData.inventory.coins}\nInventory Bag: ${playerData.inventory.bag.join(", ")}`);
             break;
             case "help":
                 console.clear();
-                console.log("Help menu:\n'W' -> Walks forward to look for enemies.\n'Print' -> Shows character information and inventory.\n'Quit' -> Quits the game.")
+                console.log("Help menu:\n'W' -> Walks forward to look for enemies.\n'Print' -> Shows character information and inventory.\n'Sell' -> Sells all the items in your bag.\n'Quit' -> Quits the game.")
             break;
             case "sell":
                 console.clear();
@@ -154,26 +154,32 @@ while(isAlive) {
                     let amountGained = 0;
 
                     // Loop through, and count how many of each item the player had..
-                    let bowlingBall, rustyArtifact, oldSword, oldBoot, pieceOfClothing, sunGlasses;
+                    let bowlingBall = 0, rustyArtifact = 0, oldSword = 0, oldBoot = 0, pieceOfClothing = 0, sunGlasses = 0;
                     playerData.inventory.bag.forEach(item => {
                         switch (item) {
                             case "Bowling Ball":
                                 bowlingBall++;
+                                delete playerData.inventory.bag[playerData.inventory.bag.findIndex("Bowling Ball")];
                             break;
                             case "Rusty Artifact":
                                 rustyArtifact++;
+                                delete playerData.inventory.bag[playerData.inventory.bag.indexOf("Rusty Artifact")];
                             break;
                             case "Old Sword":
                                 oldSword++;
+                                delete playerData.inventory.bag[playerData.inventory.bag.indexOf("Old Sword")];
                             break;
                             case "Old Boot":
                                 oldBoot++;
+                                delete playerData.inventory.bag[playerData.inventory.bag.indexOf("Old Boot")];
                             break;
                             case "Piece of clothing":
                                 pieceOfClothing++;
+                                delete playerData.inventory.bag[playerData.inventory.bag.indexOf("Piece of clothing")];
                             break;
                             case "Sunglasses":
                                 sunGlasses++;
+                                delete playerData.inventory.bag[playerData.inventory.bag.indexOf("Sunglasses")];
                             break;
                         }
                     });
@@ -182,14 +188,18 @@ while(isAlive) {
                     const bowlingBallValue = bowlingBall * 5, rustyArtifactValue = rustyArtifact * 2, oldSwordValue = oldSword * 1, oldBootValue = oldBoot * 3, pieceOfClothingValue = pieceOfClothing * 4, sunGlassesValue = sunGlasses * 8;
 
                     // Reward coins for the player's bag.
-                    const reward = bowlingBall + rustyArtifact + oldBoot + oldSword + pieceOfClothing + sunGlasses;
+                    const reward = bowlingBallValue + rustyArtifactValue + oldBootValue + oldSwordValue + pieceOfClothingValue + sunGlassesValue;
 
                     // Log what they're selling..
-                    console.log(
-                        `${bowlingBall}x Bowling Balls worth 5 coins each... +${bowlingBallValue} coins`,
-                        //TODO add the rest.
-                    );
-
+                    bowlingBall ? console.log(`${bowlingBall}x Bowling Balls worth 5 coins each... +${bowlingBallValue} coins`) : console.log('0x Bowling Balls worth 5x coins each... +0 coins');
+                    rustyArtifact ? console.log(`${rustyArtifact}x Rusty Artifacts worth 2 coins each... +${rustyArtifactValue} coins`) : console.log('0x Rusty Artifacts worth 2 coins each... +0 coins');
+                    oldBoot ? console.log( `${oldBoot}x Old Boots worth 3 coins each... +${oldBootValue} coins`) : console.log('0x Old Boots worth 3 coins each... +0 coins');
+                    oldSword ? console.log(`${oldSword}x Old Swords worth 1 coins each... +${oldSwordValue} coins`) : console.log('0x Old Swords worth 1 coins each... +0 coins');
+                    pieceOfClothing ? console.log(`${pieceOfClothing}x Pieces of Clothing worth 4 coins each... +${pieceOfClothingValue} coins`) : console.log('0x Pieces of Clothing worth 4 coins each... +0 coins');
+                    sunGlasses ? console.log(`${sunGlasses}x Sunglasses worth 8 coins each... +${sunGlassesValue} coins`) : console.log('0x Sunglasses worth 8 coins each... +0 coins');
+                    console.log(`All items sold for: ${reward ? reward : 0} coins!`);
+                    playerData.inventory.coins += reward;
+                    playerData.inventory.bag = [];
             break;
             default:
                 console.log("Command not recognized.");
