@@ -159,7 +159,7 @@ while(isAlive) {
                         switch (item) {
                             case "Bowling Ball":
                                 bowlingBall++;
-                                delete playerData.inventory.bag[playerData.inventory.bag.findIndex("Bowling Ball")];
+                                delete playerData.inventory.bag[playerData.inventory.bag.indexOf("Bowling Ball")];
                             break;
                             case "Rusty Artifact":
                                 rustyArtifact++;
